@@ -1,0 +1,21 @@
+specVersion: v0.1.0
+package:
+  name: address-lookup-table
+  version: v0.1.3-beta
+  url: https://github.com/streamingfast/substreams-solana-address-lookup-table
+  doc: |
+    A store which contains all the address loopup tables
+
+binaries:
+  default:
+    type: wasm/rust-v1
+    file: target/wasm32-unknown-unknown/release/substreams-solana-address-lookup-table.wasm
+
+modules:
+  - name: store_address_lookup_tables
+    kind: store
+    updatePolicy: append
+    valueType: string
+    initialBlock: 154656000
+    inputs:
+      - source: sf.solana.type.v1.Block
