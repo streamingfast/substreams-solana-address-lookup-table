@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package addresslookuptables.types.v1;
+
+message AddressLookupTables {
+  repeated AddressLookupTable addressLookupTables = 1;
+}
+
+message AddressLookupTable {
+  string table_address = 1;
+  repeated string addresses = 2;
+}
