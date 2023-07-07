@@ -1,4 +1,4 @@
-#[allow(dead_code)]
+// @generated
 pub mod addresslookuptables {
     pub mod types {
         // @@protoc_insertion_point(attribute:addresslookuptables.types.v1)

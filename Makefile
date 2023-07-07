@@ -9,3 +9,7 @@ protogen:
 .PHONY: package
 package: build
 	substreams pack ./substreams.yaml
+
+.PHONE: stream
+stream:
+	substreams run substreams.yaml run -e mainnet.sol.streamingfast.io:443 -t +1000

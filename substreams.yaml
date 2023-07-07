@@ -18,26 +18,29 @@ binaries:
     file: target/wasm32-unknown-unknown/release/substreams_solana_address_lookup_table.wasm
 
 modules:
-  - name: map_address_lookup_tables
-    kind: map
-    valueType: string
-    initialBlock: 154656000
-    inputs:
-      - source: sf.solana.type.v1.Block
-    output:
-      type: proto:addresslookuptables.types.v1.AddressLookupTables
-
-  - name: store_address_lookup_tables
+  - name: store_address_lookup_tables_stage_1
     kind: store
     updatePolicy: append
+    initialBlock: 154656000
     valueType: string
     inputs:
-      - map: map_address_lookup_tables
+      - source: sf.solana.type.v1.Block
+
+  - name: store_address_lookup_tables_stage_2
+    kind: store
+    updatePolicy: append
+    initialBlock: 154656000
+    valueType: string
+    inputs:
+      - store: store_address_lookup_tables_stage_1
+      - store: store_address_lookup_tables_stage_1
+        mode: deltas
 
   - name: run
     kind: map
+    initialBlock: 154656000
     output:
       type: proto:addresslookuptables.types.v1.AddressLookupTables
     inputs:
-      - source: store_address_lookup_tables
+      - store: store_address_lookup_tables_stage_2
         mode: deltas

@@ -3,7 +3,7 @@ syntax = "proto3";
 package addresslookuptables.types.v1;
 
 message AddressLookupTables {
-  repeated AddressLookupTable addressLookupTables = 1;
+  repeated AddressLookupTable address_lookup_tables = 1;
 }
 
 message AddressLookupTable {
