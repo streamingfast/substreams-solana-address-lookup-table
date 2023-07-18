@@ -9,11 +9,14 @@ use crate::pb::addresslookuptables::types::v1::{AddressLookupTables};
 
 #[substreams::handlers::store]
 pub fn store_address_lookup_tables_stage_1(block: Block, store: StoreAppend<String>) {
-    for confirmed_trx in block.transactions().filter(|trx| trx.meta().is_some()) {
-        if let Some(trx) = &confirmed_trx.transaction {
-            for compiled_instruction in trx.message.as_ref().unwrap().instructions.iter() {
+    for confirmed_trx in block.transactions_owned().filter(|trx| trx.meta().is_some()) {
+        if let Some(trx) = confirmed_trx.transaction {
+            let msg = trx.message.unwrap();
+            let accounts = msg.account_keys;
+            let table_lookup_addresses = utils::fetch_table_lookup_addresses(msg.address_table_lookups).join(":");
+
+            for compiled_instruction in msg.instructions.into_iter() {
                 let program_id = compiled_instruction.program_id_index as usize;
-                let accounts = &trx.message.as_ref().unwrap().account_keys;
                 let address_lookup_table_account = bs58::encode(&accounts[program_id]).into_string();
 
                 if address_lookup_table_account != utils::ADDRESS_LOOKUP_TABLE {
@@ -29,19 +32,18 @@ pub fn store_address_lookup_tables_stage_1(block: Block, store: StoreAppend<Stri
                 let table_address_idx = compiled_instruction.accounts[0] as usize;
 
                 if table_address_idx >= accounts.len() {
-                    let table_lookup_addresses: Vec<String> = utils::fetch_table_lookup_addresses(&trx);
                     let idx = table_address_idx - accounts.len();
 
                     store.append_all(
                         0,
-                        format!("lookup:{idx}:{}", table_lookup_addresses.join(":")),
+                        format!("lookup:{idx}:{table_lookup_addresses}"),
                         new_addresses
                     );
                     continue;
                 }
 
+                // todo: use bytes here
                 let table_address = bs58::encode(&accounts[table_address_idx]).into_string();
-
                 store.append_all(
                     0,
                     format!("resolved:{table_address}"),
@@ -54,7 +56,7 @@ pub fn store_address_lookup_tables_stage_1(block: Block, store: StoreAppend<Stri
 
 #[substreams::handlers::store]
 pub fn store_address_lookup_tables_stage_2(store_stage_1: StoreGetArray<String>, deltas_stage_1: Deltas<DeltaArray<String>>, store: StoreAppend<String>) {
-    deltas_stage_1.deltas.into_iter().for_each(|delta| {
+    deltas_stage_1.into_iter().for_each(|delta| {
         let parts: Vec<&str> = delta.key.split(":").collect();
         let address = delta.new_value.last().unwrap();
         let table_address;

@@ -1,4 +1,4 @@
-use substreams_solana::pb::sf::solana::r#type::v1::Transaction;
+use substreams_solana::pb::sf::solana::r#type::v1::{MessageAddressTableLookup};
 
 pub const ADDRESS_LOOKUP_TABLE: &str = "AddressLookupTab1e1111111111111111111111111";
 pub const ADDRESS_LOOKUP_TABLE_EXTEND_TABLE_INSTRUCTION: [u8; 4] = [2, 0, 0, 0];
@@ -19,9 +19,9 @@ pub fn parse_new_addresses(addresses: &[u8]) -> Vec<String> {
     new_addresses
 }
 
-pub fn fetch_table_lookup_addresses(trx: &Transaction) -> Vec<String> {
-    return trx.message.as_ref().unwrap().address_table_lookups.iter()
-        .map(|val| bs58::encode(&val.account_key).into_string())
+pub fn fetch_table_lookup_addresses(address_table_lookups: Vec<MessageAddressTableLookup>) -> Vec<String> {
+    return address_table_lookups.into_iter()
+        .map(|val| bs58::encode(val.account_key).into_string())
         .collect()
 }
 
