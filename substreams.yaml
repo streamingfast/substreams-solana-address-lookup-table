@@ -26,7 +26,7 @@ modules:
     inputs:
       - source: sf.solana.type.v1.Block
 
-  - name: store_address_lookup_tables_stage_2
+  - name: store_address_lookup_tables
     kind: store
     updatePolicy: append
     initialBlock: 154656000
@@ -42,5 +42,5 @@ modules:
     output:
       type: proto:addresslookuptables.types.v1.AddressLookupTables
     inputs:
-      - store: store_address_lookup_tables_stage_2
+      - store: store_address_lookup_tables
         mode: deltas

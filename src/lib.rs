@@ -55,7 +55,7 @@ pub fn store_address_lookup_tables_stage_1(block: Block, store: StoreAppend<Stri
 }
 
 #[substreams::handlers::store]
-pub fn store_address_lookup_tables_stage_2(store_stage_1: StoreGetArray<String>, deltas_stage_1: Deltas<DeltaArray<String>>, store: StoreAppend<String>) {
+pub fn store_address_lookup_tables(store_stage_1: StoreGetArray<String>, deltas_stage_1: Deltas<DeltaArray<String>>, store: StoreAppend<String>) {
     deltas_stage_1.into_iter().for_each(|delta| {
         let parts: Vec<&str> = delta.key.split(":").collect();
         let address = delta.new_value.last().unwrap();
