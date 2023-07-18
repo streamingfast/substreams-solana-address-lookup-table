@@ -19,7 +19,7 @@ pub fn parse_new_addresses(addresses: &[u8]) -> Vec<String> {
     new_addresses
 }
 
-pub fn fetch_table_lookup_addresses(address_table_lookups: Vec<MessageAddressTableLookup>) -> Vec<String> {
+pub fn fetch_lookup_table_addresses(address_table_lookups: Vec<MessageAddressTableLookup>) -> Vec<String> {
     return address_table_lookups.into_iter()
         .map(|val| bs58::encode(val.account_key).into_string())
         .collect()

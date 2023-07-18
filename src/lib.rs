@@ -13,7 +13,7 @@ pub fn store_address_lookup_tables_stage_1(block: Block, store: StoreAppend<Stri
         if let Some(trx) = confirmed_trx.transaction {
             let msg = trx.message.unwrap();
             let accounts = msg.account_keys;
-            let table_lookup_addresses = utils::fetch_table_lookup_addresses(msg.address_table_lookups).join(":");
+            let table_lookup_addresses = utils::fetch_lookup_table_addresses(msg.address_table_lookups).join(":");
 
             for compiled_instruction in msg.instructions.into_iter() {
                 let program_id = compiled_instruction.program_id_index as usize;
