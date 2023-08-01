@@ -463,11 +463,9 @@ dependencies = [
 name = "substreams-solana-address-lookup-table"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "bs58",
  "getrandom",
  "prost",
- "prost-build",
  "prost-types",
  "substreams",
  "substreams-solana",
